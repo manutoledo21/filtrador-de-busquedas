@@ -1,0 +1,71 @@
+Réplica del Proyecto del Buscador de autos
+
+Lo primero que hago es organizar mi area de trabajo, separando por partes, primero vamos a declarar las variables, después los events y al final las functions.
+Entonces a estos los separo por comments
+
+------ Declarar las variables
+
+Declaro las variables con los nombres de sus ids, entonces las selecciono con querySelector a traves de sus #.
+
+------ Events
+
+Declaro el DOMCL para que se cargue el contenido en toda la página, y al lado un arrowFunction para llamar a la funcion de mostrarAutos que abajo la creé.
+
+------ Functions
+
+Creo la funcion de mostrarAutos(autos) y le paso un .forEach para que se inicialice en cada elemento. Entonces quedaría autos.forEach() y dentro del parentesis le tengo que pasar un arrowFunction, que va a tener como nombre 'auto' y dentro del mismo voy a crear una variable 'autoHTML' y va a ser igual a .createElement('p'), esto va a crear un párrafo, entonces debajo llamo a esta variable y le paso textContent y esto va a ser igual a un template string y dentro de este le voy a pasar los nombres de los elementos que están dentro del objeto creado anteriormente. Para no tener que estar pasando auto.marca, auto.modelo, etc. Creo una variable y entre keys pongo los nombres de todos los elementos, y le doy como valor auto.
+
+------ Insertar los resultados en el HTML
+
+Para eso, usamos la variable anteriormente creada, y la pasamos como resultado.appendChild(autoHTML);
+Recordemos que appendChild muestra al final de todo los resultados
+
+------ Contenedor de resultados
+
+Acá lo que hago es crear 3 variables, la primera es resultado, que llama a traves del querySelector al id de resultado para que luego me muestre los resultados en el HTML. La segunda variable es max, que con el valor de new Date..., lo que va a hacer es tomar el año actual, para luego con la tercer variable, al restarle -10, solo muestre los autos de hasta 10 años de antigüedad en base al año vigente.
+
+------ Creo un objeto 
+Creo una variable donde le voy a pasar un objeto con los nombres de cada section
+
+------ Generar un select para los años
+
+Para llenar el select con los años desde el 2022 al 2012, porque antes ya habíamos predeterminado que íbamos a trabajar con modelos hasta de 10 años de antigüedad, por eso hasta 2012. Para eso vamos a usar un for donde vamos a definir que i va a ser igual a 'max', i va a ser mayor o igual a 'min', y esto se va a tener que restar por si mismo.
+'max' va a ser en este caso 2022, pero new Date()... se va a actualizar según el año actual y 'min' va a ser el año actual - 10.
+
+------ Leer el valor de la marca del auto
+
+Para poder filtrar los autos segun su marca, modelo, año, precio min y max, puertas, transmision y color, debemos llamar a cada uno con un addEventListener, que va a tener como parametros 'change' que va a ser cuando cambie, seguido de un llamado a un evento en un arrowFunction y sus parametros van a ser en base a la info que recolecte de los datosBusqueda, o sea, el object. Ahora para que nos de su valor, primero le pasamos su elemento(marca, modelo, year, etc) y esto va a ser igual a e.target.value para que nos de el valor. Abajo llamamos a la funcion filtrarAutos() que ahora crearemos.
+
+-En casos como el de year, minimo, maximo y puertas, usamos parseInt para pasarlos de string a number, ya que siempre que mandemos a llamar a un elemento, JS nos lo devuelve como string y no como number-.
+
+------ Creamos la función de filtrarAutos()
+
+Ahora tenemos que filtrar los resultados de la busqueda, para eso voy a crear una funcion llamada filtrarAutos() a la cual le voy a pasar como parametros una variable llamada resultado y esta va a ser igual a autos.filter(filtrar<Elemento>), filter me va a servir para se cree un array nuevo con las condiciones que le pase el usuario, en este caso se puede anidar un filter dentro de otro, y así mismo pasar todos los necesarios. Dentro del filter se está llamando a una funcion, la cual debemos crear y pasarle unos parametros.
+
+------ Creamos una funcion por cada elemento a filtrar
+
+Creamos las funciones para cada elemento del object y le pasamos como parametros:
+- Creamos una variable { nombre_del_elemento } que sea igual a datosBusqueda, y despues se le pasa una condicion (if), si (nombre_del_elemento) existe, entonces que retorne auto.nombre_del_elemento === nombre_del_elemento, sinó (else), que retorne auto (o sea, el object entero de nuevo). Esto quiere decir que si el elemento marca existe, entonces me tiene que retornar el elemento marca que encuentre dentro de auto, que va a ser igual al mismo elemento, en este caso, marca. Y sinó existe, o sea, por ejemplo si no selecciono ninguna opción, entonces que devuelva auto, o sea, que deje todo como el inicio.
+-La lógica de las funciones de precio min y max se basan en si existe un minimo, entonces que retornen los autos cuyos precios sean mayores al minimo(que si tengo autos de 30k, 40k y 50k, y pongo un minimo de 40k, se muestre el de 40k y  50k). Y al revés con la funcion de maximo, que se muestres los que sean menores al maximo, mismo ejemplo, teniendo esos precios, si pongo un maximo de 50k, que se muestren los de 50k, 40k y 30k, y no los mayores a 50k.
+
+------ Mostrar los resultados de filtrado en el HTML
+
+Para eso, cuando cargamos el contenido de la página, y mandamos a llamar a la funcion mostrarAutos(), le ponemos como parametro (autos), y nos muestra los resultados, pero como tenemos puesto appendChilden resultado, nos los va a mostrar al final de todo, y lo que necesitamos es que se muestre solo los resultados filtrados. Para eso vamos a tener que crear una nueva funcion para que nos limpie el HTML cada vez que queramos filtrar los elementos.
+
+------ Funcion para limpiar el HTML
+
+Creo la funcion limpiarHTML() y adentro le pongo un while, para que si existe al menos un resultado, remueva todo ese resultado, lo deje en vacio y solo acceda a mostrarme lo que estoy filtrando. Y ahora la mando a llamar al principio de la funcion de mostrarAutos() para que se limpie y despues me filtre los elementos que se pidan
+
+------ En caso de no encontrar resultados
+
+Creamos una funcion llamada noResultado() a la cal le pasamos los siguientes parametros:
+-Creamos una variable const llamada noResultado y le pasamos un createElement para crear un div, luego llamamos a noResultado y le pasamos dos clases por classList.add para agregarlas.
+Terminado eso, tenemos que pasarle un texto, para eso vamos a pasar de nuevo noResultado y le vamos a poner textContent y el texto que queramos. 
+Y para que aparezca, solo debemos pasarle a través de appendChild la variable noResultado.
+Y para finalizar solo debemos llamar a la funcion limpiarHTML al comienzo de la funcion noResultado para que borre el contenido anterior y solo aparezca el alerta de noResultado.
+
+Y así finaliza el proyecto del buscador.
+
+11/09/2022
+
+
